@@ -26,8 +26,7 @@
    */
 
   // First a little configuration:
-  // Set your VR API credentials
-  putenv('VR_API_CLIENT_ID=YOUR_CLIENT_ID');
+  // Set your access token
   putenv('VR_API_ACCESS_TOKEN=YOUR_ACCESS_TOKEN');
 
   // You are set! Now you can start making API calls using the wrapper
