@@ -44,7 +44,7 @@
     {
       // Let's try to create a new contact with some bad parameters
       $response = client::post(
-      	client::ROOT_URL.'contacts/',
+      	client::ROOT_URL.'contacts',
     	  array(
       	  'invalid_parameter' => 'Hi! I am not suposed to be here'
       	)

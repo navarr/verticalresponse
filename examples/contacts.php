@@ -5,10 +5,10 @@
   /**
    * DISCLAIMER! (Please read this first)
    * The following PHP script demonstrates some of the capabilities of this wrapper.
-   * The goal of this wrapper is to help you get started with the VR API. The wrapper provides 
-   * insights into connecting and making VR API calls. You can extend this and create your own 
-   * custom application. The wrapper does not cover all the API calls VR provides. For a full 
-   * list of API calls VR provides, please refer to the documentation. This software is 
+   * The goal of this wrapper is to help you get started with the VR API. The wrapper provides
+   * insights into connecting and making VR API calls. You can extend this and create your own
+   * custom application. The wrapper does not cover all the API calls VR provides. For a full
+   * list of API calls VR provides, please refer to the documentation. This software is
    * provided "as-is", please note that VerticalResponse will not maintain or update this.
    */
 
@@ -33,18 +33,18 @@
 
   // Let's shorten the namespace to make it more usable in the code
   use VerticalResponse\API\Contact as contact;
-  
-  /** 
+
+  /**
    * HOW TO: Make direct requests to the API
    * Use the methods .get and .post defined in the Contact class
    */
-    
-    /** 
+
+    /**
      * Example #1: Make a POST request to create a contact
      * TIP: You can use the constant ROOT_URL that is the base URL portion for all calls to the VR API
      */
     $response = contact::post(
-    	contact::ROOT_URL.'contacts/',
+    	contact::ROOT_URL.'contacts',
     	array(
     	  'email' => 'test_contact_1'.time().'@verticalresponse.com'
     	)
@@ -54,10 +54,10 @@
     // Notice that the response is returned in the form of an associative array
     display_response($response, 'Example #1: Make a POST request to create a contact');
 
-    /** 
+    /**
      * Example #2: Make a GET request to get all of your contacts
      */
-    $response = contact::get(contact::ROOT_URL.'contacts/');
+    $response = contact::get(contact::ROOT_URL.'contacts');
     // Let's print the contacts of the response
     // Notice that your contacts are returned in the form of an associative array
     display_response($response['items'], 'Example #2: Make a GET request to get all of your contacts');
@@ -67,7 +67,7 @@
    * Use the methods .all(), .create() and .details() defined in the Contact class
    */
 
-    /** 
+    /**
      * Example #3: Make an object oriented request to get all of your contacts
      * TIP: You can provide the type parameter in this request: Making a basic, standard or all request.
      */
@@ -104,7 +104,7 @@
     );
     display_response($response, 'Example #6: Make an object oriented request to create a contact');
 
-  
+
   function display_response($response, $title)
   {
     // Let's print the title followed by a empty line
@@ -112,5 +112,5 @@
   	echo print_r($response);
     echo '<br/><br/>End of '.$title.'<br/>';
   }
-  
+
 ?>
