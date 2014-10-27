@@ -10,7 +10,7 @@
   {
     public function base_uri()
     {
-      return Contact::ROOT_URL.'contacts';
+      return ROOT_URL.'contacts';
     }
 
     // Return all of your contacts wrapped in a Response object

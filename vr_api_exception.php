@@ -1,6 +1,6 @@
 <?php
   namespace VerticalResponse\API;
-  
+
   /**
    * Exception class for any unsuccessfull VR API calls
    * For more information, please refer to the Exception class in the PHP documentation
@@ -36,8 +36,10 @@
 
     // Return the string representation of the exception
     public function __toString() {
-      return __CLASS__ . "{$this->method} request: [{$this->code}]: {$this->message}\nURL: ({$this->method}) {$this->url}\nParameters: " .
-        print_r($this->params) . "\nFailures: " . print_r($this->failures);
+      return __CLASS__ . "{$this->method} request: [{$this->code}]: {$this->message}\n
+        URL: ({$this->method}) {$this->url}\n
+        Parameters: " . print_r($this->params) . "\n
+        Failures: " . print_r($this->failures);
     }
 
     // Returns the URL the request was made to

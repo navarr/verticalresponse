@@ -10,7 +10,7 @@
   {
     public function base_uri()
     {
-      return ContactList::ROOT_URL.'lists/';
+      return ROOT_URL.'lists/';
     }
 
     public function contacts_uri($list_id)

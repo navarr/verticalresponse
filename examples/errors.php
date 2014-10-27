@@ -1,5 +1,6 @@
 <?php
   // Let's load the required scripts for this file
+  require_once(__DIR__ . DIRECTORY_SEPARATOR . '../vr_api_config.php');
   require_once(__DIR__ . DIRECTORY_SEPARATOR . '../vr_api_client.php');
 
   /**
@@ -44,7 +45,7 @@
     {
       // Let's try to create a new contact with some bad parameters
       $response = client::post(
-      	client::ROOT_URL.'contacts',
+      	ROOT_URL.'contacts',
     	  array(
       	  'invalid_parameter' => 'Hi! I am not suposed to be here'
       	)
@@ -66,7 +67,7 @@
     try
     {
       // Let's try to get your contact lists, but we know it will fail
-      $response = client::get(client::ROOT_URL.'contacts/');
+      $response = client::get(ROOT_URL.'contacts/');
     }
     catch(VerticalResponse\API\VR_API_Error $error)
     {

@@ -1,5 +1,6 @@
 <?php
   // Let's load the required scripts for this file
+  require_once(__DIR__ . DIRECTORY_SEPARATOR . '../vr_api_config.php');
   require_once(__DIR__ . DIRECTORY_SEPARATOR . '../vr_api_contact.php');
 
   /**
@@ -25,10 +26,6 @@
    *   Example #6: Make an object oriented request to create a contact
    */
 
-  // First a little configuration:
-  // Set your access token
-  putenv('VR_API_ACCESS_TOKEN=YOUR_ACCESS_TOKEN');
-
   // You are set! Now you can start making API calls using the wrapper
 
   // Let's shorten the namespace to make it more usable in the code
@@ -41,10 +38,10 @@
 
     /**
      * Example #1: Make a POST request to create a contact
-     * TIP: You can use the constant ROOT_URL that is the base URL portion for all calls to the VR API
+     * TIP: You can use the ROOT_URL that is the base URL portion for all calls to the VR API
      */
     $response = contact::post(
-    	contact::ROOT_URL.'contacts',
+    	ROOT_URL.'contacts',
     	array(
     	  'email' => 'test_contact_1'.time().'@verticalresponse.com'
     	)
@@ -57,7 +54,7 @@
     /**
      * Example #2: Make a GET request to get all of your contacts
      */
-    $response = contact::get(contact::ROOT_URL.'contacts');
+    $response = contact::get(ROOT_URL.'contacts');
     // Let's print the contacts of the response
     // Notice that your contacts are returned in the form of an associative array
     display_response($response['items'], 'Example #2: Make a GET request to get all of your contacts');

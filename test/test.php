@@ -5,23 +5,16 @@
   /**
    * DISCLAIMER! (Please read this first)
    * The following PHP script demonstrates the capabilities of the Test class defined in the test folder.
-   * The goal of this wrapper is to help you get started with the VR API. The wrapper provides 
-   * insights into connecting and making VR API calls. You can extend this and create your own 
-   * custom application. The wrapper does not cover all the API calls VR provides. For a full 
-   * list of API calls VR provides, please refer to the documentation. This software is 
+   * The goal of this wrapper is to help you get started with the VR API. The wrapper provides
+   * insights into connecting and making VR API calls. You can extend this and create your own
+   * custom application. The wrapper does not cover all the API calls VR provides. For a full
+   * list of API calls VR provides, please refer to the documentation. This software is
    * provided "as-is", please note that VerticalResponse will not maintain or update this.
    */
 
   /**
    * This file provides examples of all the methods in the Test class of this wrapper
    */
-
-  // First a little configuration:
-  // Set your VR API credentials
-  putenv('VR_API_CLIENT_ID=YOUR_CLIENT_ID');
-  putenv('VR_API_ACCESS_TOKEN=YOUR_ACCESS_TOKEN');
-
-  // You are set! Now you can start making API calls using the wrapper
 
   // Let's create a contact
   $contact = VerticalResponse\API\Test::create_contact(

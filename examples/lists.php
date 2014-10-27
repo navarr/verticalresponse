@@ -1,5 +1,6 @@
 <?php
   // Let's load the required scripts for this file
+  require_once(__DIR__ . DIRECTORY_SEPARATOR . '../vr_api_config.php');
   require_once(__DIR__ . DIRECTORY_SEPARATOR . '../vr_api_contact_list.php');
 
   /**
@@ -41,14 +42,13 @@
    * Use the methods .get() and .post() defined in the List class
    */
 
-
     /**
      * Example #1: Make a POST request to create a new list
-     * TIP: You can use the constant ROOT_URL that is the base URL portion for all calls to the VR API
+     * TIP: You can use the ROOT_URL that is the base URL portion for all calls to the VR API
      */
     echo "Test";
     $response =  contactList::post(
-      contactList::ROOT_URL.'lists',
+      ROOT_URL.'lists',
       array(
         'name' => 'Test list'.time().'1'
       )
@@ -60,10 +60,10 @@
 
     /**
      * Example #2: Make a GET request to get your lists
-     * TIP: You can use the constant ROOT_URL that is the base URL portion for all calls to the VR API
+     * TIP: You can use the ROOT_URL that is the base URL portion for all calls to the VR API
      */
     $response = contactList::get(
-      contactList::ROOT_URL.'lists',
+      ROOT_URL.'lists',
       array('type' => 'basic')
     );
     // Notice that the response is returned in the form of an associative array
