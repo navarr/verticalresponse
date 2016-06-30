@@ -1,164 +1,152 @@
 <?php
 
-namespace VerticalResponse\API;
+namespace VerticalResponse;
 
-/**
- * Base class that handles the calls and responses made to the VR API.
- */
+use Psr\Http\Message\ResponseInterface;
+use VerticalResponse\Client\Exception;
+use VerticalResponse\Client\HttpClient;
+use VerticalResponse\Client\HttpException;
+use VerticalResponse\Client\RequestProvider;
+
 class Client
 {
-    const ROOT_URL = 'https://vrapi.verticalresponse.com/api/v1/';
+    const LOCATION = 'https://vrapi.verticalresponse.com/api/v1/';
 
-    // Attributes
-    public $response;
-
+    /**
+     * @var string
+     */
     private $accessToken;
 
-    /*
-     * Class constructor
-    */
-    public function __construct($response, $accessToken = null)
-    {
-        $this->response = $response;
-        $this->accessToken = $accessToken;
-    }
+    /**
+     * @var RequestProvider
+     */
+    private $requestProvider;
 
-    /*
-     * Return the ID of the current object based on the response
-    */
-    public function id()
+    /**
+     * @var HttpClient
+     */
+    private $client;
+
+    /**
+     * Client constructor.
+     * @param string               $accessToken
+     * @param HttpClient|null      $client
+     * @param RequestProvider|null $requestProvider
+     */
+    public function __construct($accessToken, HttpClient $client = null, RequestProvider $requestProvider = null)
     {
-        return $this->response->attributes['id'];
+        $this->accessToken = $accessToken;
+        if (!$client && !class_exists('VerticalResponse\Client\GuzzleClient')) {
+            throw new \InvalidArgumentException('An HttpClient is required, or verticalresponse-guzzle installed');
+        }
+        if (!$requestProvider && !class_exists('VerticalResponse\Client\GuzzleRequestFactory')) {
+            throw new \InvalidArgumentException('A RequestProvider is required, or verticalresponse-guzzle installed');
+        }
+        $this->requestProvider = $requestProvider ?: new \VerticalResponse\Client\GuzzleRequestFactory();
+        $this->client = $client ?: new \VerticalResponse\Client\GuzzleClient(['base_uri' => static::LOCATION]);
     }
 
     /**
-     * @param string $accessToken
-     * @return $this
+     * @param string $url
+     * @param array  $parameters
+     * @return \stdClass
+     * @throws Exception
+     * @throws HttpException
      */
-    public function setAccessToken($accessToken)
+    public function get($url, $parameters = [])
     {
-        $this->accessToken = $accessToken;
-        return $this;
+        $parameters = $this->addAccessTokenToParameters($parameters);
+        $query = $this->buildQuery($url, $parameters);
+        $url = static::LOCATION.$url.(strpos($url, '?') !== false ? '&' : '?').$query;
+        $headers = $this->buildHeaders();
+
+        $request = $this->requestProvider->createRequest('GET', $url, $headers);
+        $response = $this->client->send($request);
+
+        // Throw any errors we have before continuing
+        $this->errorCheckResponse($response);
+
+        return json_decode($response->getBody());
     }
 
-    /*
-     * Makes a GET request to the VR API
-    * Returns the API response in the form of an associative array
-    */
-    public function get($url, $parameters = array())
+    /**
+     * @param string $url
+     * @param array  $parameters
+     * @return \stdClass
+     * @throws Exception
+     * @throws HttpException
+     */
+    public function post($url, $parameters = [])
     {
-        $url = self::build_request_url($url, $parameters);
+        $parameters = $this->addAccessTokenToParameters($parameters);
+        $url = static::LOCATION.$url;
+        $headers = $this->buildHeaders();
 
-        $ch = self::initialize_curl($url);
+        $request = $this->requestProvider->createRequest('POST', $url, $headers, json_encode($parameters));
+        $response = $this->client->send($request);
 
-        return self::perform_request($ch);
+        $this->errorCheckResponse($response);
+
+        return json_decode($response->getBody());
     }
 
-    /*
-     * Makes a POST request to the VR API
-    * Returns the API response in the form of an associative array
-    */
-    public function post($url, $parameters = array())
-    {
-        $url = self::build_request_url($url);
-
-        $ch = self::initialize_curl($url);
-        curl_setopt($ch, CURLOPT_POST, 1);
-        curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode($parameters));
-
-        return self::perform_request($ch);
-    }
-
-    /*
-     * Performs the call to the VR API, and handles the response
-    * If any CURL-related errors ocurred during the request, it throws a CURL_Error exception
-    * If the API response request got any errors, it throws a VR_API_Error exception
-    * Returns the response in the form of an associative array
-    */
-    public function perform_request($ch)
-    {
-        // Execute the request
-        $response = curl_exec($ch);
-
-        // Check if curl had an error while processing the request
-        if (curl_error($ch)) {
-            // Throw a new CURL_Error
-            throw new CURLException("Error in curl while processing request: ".curl_error($ch), curl_errno($ch));
-        }
-
-        // Decode the json response
-        $decoded_response = json_decode($response, true);
-
-        if (!isset($decoded_response)) {
-            $decoded_response = json_decode(
-                json_encode(
-                    array(
-                        "error" => array("code" => -1, "message" => "JSON returned is not valid.\n".$response),
-                    )
-                ), true
-            );
-        }
-
-        // Check if the VR API response has any errors
-        if (self::got_errors($decoded_response)) {
-            // Close the curl request
-            curl_close($ch);
-
-            // Throw a new VR_API_Error
-            throw new Exception($decoded_response['error']);
-        }
-
-        // Close the curl request
-        curl_close($ch);
-
-        // Return the JSON decoded response
-        return $decoded_response;
-    }
-
-    /*
-     * Build a request url with query string parameters
-    */
-    protected function build_request_url($url, $parameters = array())
-    {
-        self::add_access_token_to_query_string($parameters);
-
-        $url .= (strpos($url, '?') !== false) ? "&" : "?";
-        $url .= http_build_query($parameters);
-
-        return $url;
-    }
-
-    /*
-     * Checks if the VR API response has errors
-    */
-    protected function got_errors($response)
-    {
-        // Check if the response has errors
-        return array_key_exists("error", $response) && sizeof($response["error"]) > 0;
-    }
-
-    /*
-     * Initializes the CURL object with common option settings
-    */
-    protected function initialize_curl($url)
-    {
-        $ch = curl_init();
-        curl_setopt($ch, CURLOPT_URL, $url);
-        curl_setopt($ch, CURLOPT_TIMEOUT, 30);
-        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-
-        $headers = array('Content-Type: application/json; charset=utf-8');
-
-        curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
-
-        return $ch;
-    }
-
-    /*
-     * Append the access token to the query string
-    */
-    protected function add_access_token_to_query_string(&$parameters)
+    /**
+     * @param array $parameters
+     * @return array
+     */
+    protected function addAccessTokenToParameters($parameters)
     {
         $parameters['access_token'] = $this->accessToken;
+        return $parameters;
+    }
+
+    /**
+     * @param string $url
+     * @param array  $parameters
+     * @return string
+     */
+    protected function buildQuery($url, $parameters)
+    {
+        return http_build_query($parameters);
+    }
+
+    /**
+     * @return string[]
+     */
+    protected function buildHeaders()
+    {
+        return [
+            'Content-Type' => 'application/json; charset=utf-8',
+        ];
+    }
+
+    /**
+     * @param ResponseInterface $response
+     * @return void
+     * @throws Exception
+     * @throws HttpException
+     */
+    protected function errorCheckResponse(ResponseInterface $response)
+    {
+        $body = $response->getBody();
+
+        if ($response->getStatusCode() >= 400) {
+            throw new HttpException($response);
+        }
+
+        $responseObject = json_decode($body);
+        if (!isset($json)) {
+            throw new Exception('JSON returned is not valid', $response);
+        }
+
+        if (isset($responseObject->error)) {
+            throw new Exception($responseObject->error, $response);
+        }
+    }
+
+    /** @return string */
+    public function getLocation()
+    {
+        return static::LOCATION;
     }
 }
