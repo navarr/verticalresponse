@@ -1,0 +1,3 @@
+# Libraries don't need composer.lock!
+composer.lock
+vendor/

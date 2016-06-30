@@ -1,0 +1,14 @@
+{
+  "name": "navarr/verticalresponse",
+  "description": "Vertical Response API Wrapper - converted from official Vertical Response repository",
+  "minimum-stability": "stable",
+  "require": {
+    "php": ">=5.6",
+    "ext-curl": "*"
+  },
+  "autoload": {
+    "psr-4": {
+      "VerticalResponse\\API\\": "src/"
+    }
+  }
+}

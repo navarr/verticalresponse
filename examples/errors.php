@@ -28,7 +28,7 @@
   // You are set! Now you can start making API calls using the wrapper
 
   // Let's shorten the namespace to make it more usable in the code
-  use VerticalResponse\API\VR_APIClient as client;
+  use VerticalResponse\API\Client as client;
 
   /**
    * HOW TO: Handle posible exceptions that might occur while using this wrapper
@@ -51,7 +51,7 @@
       	)
       );
     }
-    catch(VerticalResponse\API\VR_API_Error $error)
+    catch(VerticalResponse\API\Exception $error)
     {
       // Handle the exception here
       // For this demo, we will print the exception generated
@@ -69,7 +69,7 @@
       // Let's try to get your contact lists, but we know it will fail
       $response = client::get(ROOT_URL.'contacts/');
     }
-    catch(VerticalResponse\API\VR_API_Error $error)
+    catch(VerticalResponse\API\Exception $error)
     {
       // Handle the exception here
       // For this demo, we will print the exception generated
@@ -82,7 +82,7 @@
     // Let's print the title followed by a empty line
     echo '<br/>'.$title.'<br/><br/>';
   	// If the object is a CURL_Error exception
-    if(is_a($error, 'VerticalResponse\API\CURL_Error'))
+    if(is_a($error, 'VerticalResponse\API\CURLException'))
   	{
       // Let's print the details of the exception
   	  echo 'Oh no! Something went wrong while attempting to perform the request.';
@@ -95,7 +95,7 @@
   	  echo '<br/>';
   	}
   	// If the object is a VR_API_Error exception
-  	elseif(is_a($error, 'VerticalResponse\API\VR_API_Error'))
+  	elseif(is_a($error, 'VerticalResponse\API\Exception'))
   	{
       // Let's print the details of the exception
   	  echo 'Oh no! An error was detected in the response.';
