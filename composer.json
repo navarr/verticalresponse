@@ -1,5 +1,6 @@
 {
   "name": "navarr/verticalresponse",
+  "license": "MIT",
   "description": "Vertical Response API Wrapper - converted from official Vertical Response repository",
   "minimum-stability": "stable",
   "require": {
