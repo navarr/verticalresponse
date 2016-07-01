@@ -3,6 +3,7 @@
 namespace VerticalResponse;
 
 use Psr\Http\Message\ResponseInterface;
+use Psr\Http\Message\StreamInterface;
 use VerticalResponse\Client\Exception;
 use VerticalResponse\Client\HttpClient;
 use VerticalResponse\Client\HttpException;
@@ -65,7 +66,7 @@ class Client
         // Throw any errors we have before continuing
         $this->errorCheckResponse($response);
 
-        return json_decode($response->getBody());
+        return json_decode($this->streamToString($response->getBody()));
     }
 
     /**
@@ -85,7 +86,7 @@ class Client
 
         $this->errorCheckResponse($response);
 
-        return json_decode($response->getBody());
+        return json_decode($this->streamToString($response->getBody()));
     }
 
     /**
@@ -123,7 +124,7 @@ class Client
             throw new HttpException($response);
         }
 
-        $responseObject = json_decode($body);
+        $responseObject = json_decode($this->streamToString($body));
         if (!isset($json)) {
             throw new Exception('JSON returned is not valid', $response);
         }
@@ -131,6 +132,16 @@ class Client
         if (isset($responseObject->error)) {
             throw new Exception($responseObject->error, $response);
         }
+    }
+
+    /**
+     * @param StreamInterface $stream
+     * @return string
+     */
+    protected function streamToString(StreamInterface $stream)
+    {
+        $stream->rewind();
+        return $stream->getContents();
     }
 
     /** @return string */
