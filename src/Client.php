@@ -124,8 +124,8 @@ class Client
             throw new HttpException($response);
         }
 
-        $responseObject = json_decode($this->streamToString($body));
-        if (!isset($json)) {
+        $responseObject = @json_decode($this->streamToString($body));
+        if (!isset($responseObject)) {
             throw new Exception('JSON returned is not valid', $response);
         }
 
