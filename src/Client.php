@@ -55,7 +55,6 @@ class Client
      */
     public function get($url, $parameters = [])
     {
-        $parameters = $this->addAccessTokenToParameters($parameters);
         $query = $this->buildQuery($url, $parameters);
         $url = static::LOCATION.$url.(strpos($url, '?') !== false ? '&' : '?').$query;
         $headers = $this->buildHeaders();
@@ -78,7 +77,6 @@ class Client
      */
     public function post($url, $parameters = [])
     {
-        $parameters = $this->addAccessTokenToParameters($parameters);
         $url = static::LOCATION.$url;
         $headers = $this->buildHeaders();
 
@@ -88,16 +86,6 @@ class Client
         $this->errorCheckResponse($response);
 
         return json_decode($response->getBody());
-    }
-
-    /**
-     * @param array $parameters
-     * @return array
-     */
-    protected function addAccessTokenToParameters($parameters)
-    {
-        $parameters['access_token'] = $this->accessToken;
-        return $parameters;
     }
 
     /**
@@ -117,6 +105,7 @@ class Client
     {
         return [
             'Content-Type' => 'application/json; charset=utf-8',
+            'Authorization' => "Bearer {$this->accessToken}",
         ];
     }
 
