@@ -24,7 +24,7 @@ constructor as clean as possible.
 
 HOWEVER, I didn't want all of Guzzle packaged with every installation of this - so it's only a _suggested_ dependency.
 
-TL;DR: To use this library, it's recommended you `composer require navarr/verticalresponse-guzzle`.
+TL;DR: To use this library, it's recommended you `composer require navarr/verticalresponse navarr/verticalresponse-guzzle`.
 
 ### Usage in Code
 
