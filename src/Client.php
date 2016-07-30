@@ -5,9 +5,9 @@ namespace VerticalResponse;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\StreamInterface;
 use VerticalResponse\Client\Exception;
-use VerticalResponse\Client\HttpClient;
+use VerticalResponse\Client\HttpClientInterface;
 use VerticalResponse\Client\HttpException;
-use VerticalResponse\Client\RequestProvider;
+use VerticalResponse\Client\RequestProviderInterface;
 
 class Client
 {
@@ -19,23 +19,27 @@ class Client
     private $accessToken;
 
     /**
-     * @var RequestProvider
+     * @var RequestProviderInterface
      */
     private $requestProvider;
 
     /**
-     * @var HttpClient
+     * @var HttpClientInterface
      */
     private $client;
 
     /**
      * Client constructor.
-     * @param string               $accessToken
-     * @param HttpClient|null      $client
-     * @param RequestProvider|null $requestProvider
+     *
+     * @param string                        $accessToken
+     * @param HttpClientInterface|null      $client
+     * @param RequestProviderInterface|null $requestProvider
      */
-    public function __construct($accessToken, HttpClient $client = null, RequestProvider $requestProvider = null)
-    {
+    public function __construct(
+        $accessToken,
+        HttpClientInterface $client = null,
+        RequestProviderInterface $requestProvider = null
+    ) {
         $this->accessToken = $accessToken;
         if (!$client && !class_exists('VerticalResponse\Client\GuzzleClient')) {
             throw new \InvalidArgumentException('An HttpClient is required, or verticalresponse-guzzle installed');
@@ -50,6 +54,7 @@ class Client
     /**
      * @param string $url
      * @param array  $parameters
+     *
      * @return \stdClass
      * @throws Exception
      * @throws HttpException
@@ -72,6 +77,7 @@ class Client
     /**
      * @param string $url
      * @param array  $parameters
+     *
      * @return \stdClass
      * @throws Exception
      * @throws HttpException
@@ -92,6 +98,7 @@ class Client
     /**
      * @param string $url
      * @param array  $parameters
+     *
      * @return string
      */
     protected function buildQuery($url, $parameters)
@@ -105,13 +112,14 @@ class Client
     protected function buildHeaders()
     {
         return [
-            'Content-Type' => 'application/json; charset=utf-8',
+            'Content-Type'  => 'application/json; charset=utf-8',
             'Authorization' => "Bearer {$this->accessToken}",
         ];
     }
 
     /**
      * @param ResponseInterface $response
+     *
      * @return void
      * @throws Exception
      * @throws HttpException
@@ -136,6 +144,7 @@ class Client
 
     /**
      * @param StreamInterface $stream
+     *
      * @return string
      */
     protected function streamToString(StreamInterface $stream)

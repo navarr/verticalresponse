@@ -4,7 +4,7 @@ namespace VerticalResponse\Client;
 
 use Psr\Http\Message\RequestInterface;
 
-interface RequestProvider
+interface RequestProviderInterface
 {
     /**
      * @param string      $method

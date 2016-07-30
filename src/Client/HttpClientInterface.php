@@ -5,7 +5,7 @@ namespace VerticalResponse\Client;
 use Psr\Http\Message\RequestInterface;
 use Psr\Http\Message\ResponseInterface;
 
-interface HttpClient
+interface HttpClientInterface
 {
     /**
      * @param RequestInterface $request
