@@ -9,7 +9,7 @@
     "navarr/verticalresponse-provider-implementation": "^3.0"
   },
   "require-dev": {
-    "navarr/verticalresponse-guzzle": "^1.0"
+    "navarr/verticalresponse-guzzle": "^1.1"
   },
   "suggest": {
     "navarr/verticalresponse-guzzle": ""
