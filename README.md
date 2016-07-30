@@ -2,7 +2,7 @@
 
 [![Latest Stable Version](https://poser.pugx.org/navarr/verticalresponse/v/stable)](https://packagist.org/packages/navarr/verticalresponse)
 [![License](https://poser.pugx.org/navarr/verticalresponse/license)](https://packagist.org/packages/navarr/verticalresponse)
-[![Scrutinizer](https://scrutinizer-ci.com/g/navarr/verticalresponse/badges/quality-score.png?b=master)](https://scrutinizer-ci.com/g/navarr/Sockets/)
+[![Scrutinizer](https://scrutinizer-ci.com/g/navarr/verticalresponse/badges/quality-score.png?b=master)](https://scrutinizer-ci.com/g/navarr/verticalresponse/)
 [![Total Downloads](https://poser.pugx.org/navarr/verticalresponse/downloads)](https://packagist.org/packages/navarr/verticalresponse)
 
 ## Introduction
